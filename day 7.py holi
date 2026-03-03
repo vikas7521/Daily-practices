@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Happy Holi</title>
+
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    font-family:Arial;
+    text-align:center;
+    color:white;
+}
+
+h1{
+    position:absolute;
+    top:40%;
+    width:100%;
+    font-size:70px;
+    letter-spacing:5px;
+    animation: glow 1.5s infinite alternate;
+}
+
+p{
+    position:absolute;
+    top:60%;
+    width:100%;
+    font-size:30px;
+}
+
+@keyframes glow{
+    from{ text-shadow:0 0 20px red,0 0 40px yellow;}
+    to{ text-shadow:0 0 20px cyan,0 0 40px magenta;}
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<h1>HAPPY HOLI</h1>
+<p>Vikas Shrivastav</p>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createParticles(x,y){
+    for(let i=0;i<60;i++){
+        particles.push({
+            x:x,
+            y:y,
+            dx:(Math.random()-0.5)*6,
+            dy:(Math.random()-0.5)*6,
+            size:Math.random()*8+2,
+            color:`hsl(${Math.random()*360},100%,50%)`
+        });
+    }
+}
+
+canvas.addEventListener("click",(e)=>{
+    createParticles(e.clientX,e.clientY);
+});
+
+function animate(){
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+        p.x+=p.dx;
+        p.y+=p.dy;
+        p.size*=0.96;
+
+        ctx.fillStyle=p.color;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fill();
+
+        if(p.size<0.5) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
